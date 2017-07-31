@@ -1,0 +1,15 @@
+{
+  "name": "metabotnode",
+  "version": "1.0.0",
+  "description": "Bot that talks about bots. Uses the Microsoft Bot Framework.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Patick James Brian Witbrod",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.9.0",
+    "restify": "^5.0.1"
+  }
+}
