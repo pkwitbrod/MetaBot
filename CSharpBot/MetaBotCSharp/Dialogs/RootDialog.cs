@@ -18,12 +18,28 @@ namespace MetaBotCSharp.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
-
-            // calculate something for us to return
-            int length = (activity.Text ?? string.Empty).Length;
+            string message;
+            switch (activity.Text.ToLowerInvariant())
+            {
+                case "Hello":
+                    message = "hello! how are you?";
+                    break;
+                case "what can you do?":
+                    message = "I can't do much. I'm not very useful.";
+                    break;
+                case "why would you make a bot like this?":
+                    message = "I don't think you should. I am the 'Hello world' of Bots";
+                    break;
+                case "that's sad":
+                    message = "I don't know what sad is. You can probably add that with cognitive services.";
+                    break;
+                default:
+                    message = "I don't know what you mean. I just use a switch statement.";
+                    break;
+            }
 
             // return our reply to the user
-            await context.PostAsync($"You sent {activity.Text} which was {length} characters");
+            await context.PostAsync(message);
 
             context.Wait(MessageReceivedAsync);
         }
