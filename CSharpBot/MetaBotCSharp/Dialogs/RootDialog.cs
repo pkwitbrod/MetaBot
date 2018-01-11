@@ -21,8 +21,8 @@ namespace MetaBotCSharp.Dialogs
             string message;
             switch (activity.Text.ToLowerInvariant())
             {
-                case "Hello":
-                    message = "hello! how are you?";
+                case "hello":
+                    message = "Hello there!";
                     break;
                 case "what can you do?":
                     message = "I can't do much. I'm not very useful.";
@@ -32,6 +32,10 @@ namespace MetaBotCSharp.Dialogs
                     break;
                 case "that's sad":
                     message = "I don't know what sad is. You can probably add that with cognitive services.";
+                    break;
+                case "what did we do":
+                    message =
+                        "So far not much. You have created a bot with the template, installed required packages, and added this and other messages. Pretty simple though right?";
                     break;
                 default:
                     message = "I don't know what you mean. I just use a switch statement.";
