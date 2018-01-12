@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
@@ -18,34 +19,45 @@ namespace MetaBotCSharp.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
-            string message;
+            string returnMessage;
             switch (activity.Text.ToLowerInvariant())
             {
                 case "hello":
-                    message = "Hello there!";
+                    returnMessage = "Hello there!";
+                    await this.StandardMessageReturn(returnMessage, context);
                     break;
-                case "what can you do?":
-                    message = "I can't do much. I'm not very useful.";
-                    break;
-                case "why would you make a bot like this?":
-                    message = "I don't think you should. I am the 'Hello world' of Bots";
-                    break;
-                case "that's sad":
-                    message = "I don't know what sad is. You can probably add that with cognitive services.";
+                case "tell me about yourself":
+                    var aboutBot = new AboutBot();
+                    await context.Forward(aboutBot, this.ResumeAfterTalkingAboutYourSelf, activity, new CancellationToken());
                     break;
                 case "what did we do":
-                    message =
-                        "So far not much. You have created a bot with the template, installed required packages, and added this and other messages. Pretty simple though right?";
+                    returnMessage =
+                        "You added an about bot dialog. Ask me about myself and I'll explain.";
+                    await this.StandardMessageReturn(returnMessage, context);
                     break;
                 default:
-                    message = "I don't know what you mean. I just use a switch statement.";
+                    returnMessage = "I don't know what you mean. I just use a switch statement.";
+                    await this.StandardMessageReturn(returnMessage, context);
                     break;
             }
 
-            // return our reply to the user
-            await context.PostAsync(message);
+   
+        }
+
+        private async Task StandardMessageReturn(string returnMessage, IDialogContext context)
+        {
+            await context.PostAsync(returnMessage);
 
             context.Wait(MessageReceivedAsync);
+        }
+
+
+        private async Task ResumeAfterTalkingAboutYourSelf(IDialogContext context, IAwaitable<object> result)
+        {
+            var resultFromTalkingAboutMyself = await result;
+            await Task.Delay(3000);
+            await context.PostAsync($"I'm done talking about myself and am back in the root dialog you thought dialogs were '{resultFromTalkingAboutMyself}'");
+            context.Wait(this.MessageReceivedAsync);
         }
     }
 }
